@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  mosquitto:
+    container_name: camel-paho-demo-mqtt
+    image: eclipse-mosquitto:1.6.12
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto:/mosquitto
