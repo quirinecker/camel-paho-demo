@@ -4,6 +4,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.event.Observes;
 
+// will take every configuration with prefix paho because of the name PahoConfiguration
 @ConfigProperties
 public class PahoConfiguration {
     // URL to the Broker
