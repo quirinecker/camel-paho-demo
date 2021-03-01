@@ -10,6 +10,7 @@ public class CamelPahoCallback implements MqttCallback {
     @Override
     public void connectionLost(Throwable throwable) { }
 
+    // This code will run if something is published to the mqtt broker
     @Override
     public void messageArrived(String topic, MqttMessage message) {
         System.out.println(topic + ": " + new String(message.getPayload()));

@@ -1,58 +1,49 @@
-# camel-paho-demo project
+# Camel Paho Demo
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Start MQTT
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
+```shell
+docker-compose up -d
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+## Start Quarkus
 
-## Packaging and running the application
+### Before you start
+Before you can start the application you must rename the `.env.template` file into `.env` and replace `<Password>` 
+with the actual password of your mqtt broker inside the `.env` file.
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
+### Start
+```shell
+./mvnw clean compile quarkus:dev
 ```
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## Publish Something with Quarkus
 
-## Creating a native executable
+Open the request.http in Intellij. There is already a request implemented. You run this Request and it will publish 
+the content of the body to the topic configurated in the `application.properties` (`paho.topic-write`) file. 
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+## Subscribe to MQTT
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
+Quarkus will automatically subscribe to the topic configured in the `application.properties` (`paho.topic-read`). To 
+test this you need to publish something with something like the MQTT Explorer.
 
-You can then execute your native executable with: `./target/camel-paho-demo-1.0.0-SNAPSHOT-runner`
+https://mqtt-explorer.com/
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
+## Code Documentation
 
-## Related guides
+### CamelPahoCallback
+This file ist for the Subscription Callback and includes the methods that will run when a message arrived, the 
+connection is lost, etc.
 
-- Camel Paho ([guide](https://camel.apache.org/camel-quarkus/latest/reference/extensions/paho.html)): Communicate with MQTT message brokers using Eclipse Paho MQTT Client
+### CamelPahoPublisher
+Is the code for publishing something to the mqtt broker.
 
-## Provided examples
+### CamelPahoSubscriber
+Code for subscribing to a mqtt broker.
 
-### RESTEasy JAX-RS example
+### PahoConfiguration
+Class for the Configurations set in the application.properties or .env file. See below.
 
-REST is easy peasy with this Hello World RESTEasy resource.
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+## Configurations
+There are two configurations files (`.env` file, `application.properties`). The .env file is not version controlled 
+and only includes the password. The other configurations are present in the application.properties.

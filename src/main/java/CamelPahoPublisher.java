@@ -20,27 +20,34 @@ import java.util.logging.Handler;
 public class CamelPahoPublisher {
 
     @Inject PahoConfiguration config;
+
     MqttClient client;
 
     void onStart(@Observes StartupEvent ev) throws MqttException {
+        // new MqttClient(url out of the config file, client id [is random generated], new MemoryPersistence)
         client = new MqttClient(
                 config.url,
                 MqttClient.generateClientId(),
                 new MemoryPersistence()
         );
 
+        // Options for the connection to the mqtt broker
         MqttConnectOptions options = new MqttConnectOptions();
         options.setPassword(config.password.toCharArray());
         options.setUserName(config.username);
         options.setCleanSession(true);
 
+
+        // connecting to the mqtt broker
         client.connect(options);
     }
 
+    // will publish the passed through String to the configured topic-write
     public void publish(String message) throws MqttException {
         client.publish(config.topicWrite, new MqttMessage(message.getBytes()));
     }
 
+    // (POST localhost:8080/publish) will publish the body content to the mqtt broker.
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes({MediaType.TEXT_PLAIN})
